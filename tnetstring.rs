@@ -65,10 +65,10 @@ fn to_writer(writer: io::writer, t: t) {
         map(m) {
             let buf = io::mem_buffer();
             let wr = io::mem_buffer_writer(buf);
-            m.items({ |key, value|
+            for m.each { |key, value|
                 to_writer(wr, str(key));
                 to_writer(wr, value);
-            });
+            };
             let payload = io::mem_buffer_buf(buf);
             writer.write_str(#fmt("%u:", vec::len(payload)));
             writer.write(payload);
@@ -251,7 +251,7 @@ fn eq(t0: t, t1: t) -> bool {
         (map(d0), map(d1)) {
             if d0.size() == d1.size() {
                 let mut equal = true;
-                d0.items() { |k, v|
+                for d0.each { |k, v|
                     if !d1.contains_key(k) || !eq(d1.get(k), v) {
                         equal = false;
                     }
